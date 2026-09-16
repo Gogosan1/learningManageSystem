@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zelenev.LearningManageSystem.exceptions.RecourseNotFoundException;
+import ru.zelenev.LearningManageSystem.exceptions.ResourceNotFoundException;
 import ru.zelenev.LearningManageSystem.model.PagedResponse;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherCreateDto;
@@ -28,7 +28,7 @@ public class TeacherService {
     @Transactional(readOnly = true)
     public TeacherResponseDto getTeacher(UUID id) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new RecourseNotFoundException("User with this id does not exist!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id " + id + " does not exist!"));
 
         return teacherMapper.toResponseDto(teacher);
     }
@@ -54,24 +54,26 @@ public class TeacherService {
     @Transactional
     public TeacherResponseDto createTeacher(TeacherCreateDto teacherCreateDto) {
         Teacher teacher = teacherMapper.toEntity(teacherCreateDto);
-        teacherRepository.save(teacher);
-        return teacherMapper.toResponseDto(teacher);
+        Teacher savedTeacher = teacherRepository.save(teacher);
+        return teacherMapper.toResponseDto(savedTeacher);
     }
 
     @Transactional
     public void deleteTeacher(UUID id) {
        Teacher teacher = teacherRepository.findById(id)
-               .orElseThrow(() -> new RecourseNotFoundException("Teacher with "+ id +" does not exist!"));
+               .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
         teacherRepository.delete(teacher);
     }
 
     @Transactional
     public TeacherResponseDto patchTeacher(UUID id, TeacherPatchDto dto) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new RecourseNotFoundException("Teacher with "+ id +" does not exist!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
 
         teacherMapper.updateTeacherFromPatchDto(dto,teacher);
 
-        return teacherMapper.toResponseDto(teacher);
+        Teacher updatedTeacher = teacherRepository.save(teacher);
+
+        return teacherMapper.toResponseDto(updatedTeacher);
     }
 }
