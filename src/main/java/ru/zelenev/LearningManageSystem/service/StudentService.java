@@ -72,7 +72,7 @@ public class StudentService {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student with id "+ id + " does not exists!"));
 
-        studentMapper.updateTeacherFromPatchDto(studentPatchDto,student);
+        studentMapper.updateStudentFromPatchDto(studentPatchDto,student);
 
         Student savedStudent = studentRepository.save(student);
 
