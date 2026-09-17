@@ -1,4 +1,4 @@
-package ru.zelenev.LearningManageSystem.exceptions;
+package ru.zelenev.LearningManageSystem.util.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

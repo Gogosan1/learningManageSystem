@@ -7,7 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.zelenev.LearningManageSystem.model.PagedResponse;
+import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherCreateDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherResponseDto;

@@ -1,4 +1,4 @@
-package ru.zelenev.LearningManageSystem.model;
+package ru.zelenev.LearningManageSystem.util.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
