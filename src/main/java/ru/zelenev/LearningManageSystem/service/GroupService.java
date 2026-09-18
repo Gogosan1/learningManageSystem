@@ -26,8 +26,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public GroupResponseDto getGroup(UUID id) {
-        Group group = groupRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Group with id " + id + " does not exist!"));
+        Group group = getGroupByIdOrThrow(id);
         return groupMapper.toResponseDto(group);
     }
 
@@ -57,20 +56,23 @@ public class GroupService {
 
     @Transactional
     public void deleteGroup(UUID id) {
-        Group group = groupRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Group with id " + id + " does not exists"));
+        Group group = getGroupByIdOrThrow(id);
         groupRepository.delete(group);
     }
 
     @Transactional
     public GroupResponseDto patchGroup(UUID id, GroupPatchDto dto) {
-        Group group =  groupRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Group with id " + id + " does not exists"));
+        Group group =  getGroupByIdOrThrow(id);
 
         groupMapper.updateGroupFromPatchDto(dto, group);
 
         Group updatedGroup = groupRepository.save(group);
         return groupMapper.toResponseDto(updatedGroup);
+    }
+
+    Group getGroupByIdOrThrow(UUID id){
+        return groupRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Group with id " + id + " does not exists"));
     }
 
 }

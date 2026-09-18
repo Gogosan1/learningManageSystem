@@ -12,7 +12,6 @@ import ru.zelenev.LearningManageSystem.model.entity.Course;
 import ru.zelenev.LearningManageSystem.model.entity.Teacher;
 import ru.zelenev.LearningManageSystem.model.mapper.CourseMapper;
 import ru.zelenev.LearningManageSystem.repository.CourseRepository;
-import ru.zelenev.LearningManageSystem.repository.TeacherRepository;
 import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
 
@@ -24,14 +23,12 @@ import java.util.UUID;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final TeacherRepository teacherRepository;
+    private final TeacherService teacherService;
     private final CourseMapper courseMapper;
 
     @Transactional(readOnly = true)
     public CourseResponseDto getCourse(UUID id) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Course with id " + id + " does not exist!"));
+        Course course = getCourseByIdOrThrow(id);
         return courseMapper.toResponseDto(course);
     }
 
@@ -57,9 +54,7 @@ public class CourseService {
 
         Course course = courseMapper.toEntity(dto);
 
-        Teacher teacher = teacherRepository.findById(dto.teacherId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Teacher with id " + dto.teacherId() + " does not exist!"));
+        Teacher teacher = teacherService.getTeacherByIdOrThrow(dto.teacherId());
 
         course.setTeacher(teacher);
 
@@ -69,29 +64,29 @@ public class CourseService {
 
     @Transactional
     public void deleteCourse(UUID id) {
-        Course course =  courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Course with id " + id + " does not exist!"));
+        Course course = getCourseByIdOrThrow(id);
         courseRepository.delete(course);
     }
 
     @Transactional
     public CourseResponseDto patchCourse(UUID id, CoursePatchDto dto) {
-        Course course =  courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Course with id " + id + " does not exist!"));
+        Course course = getCourseByIdOrThrow(id);
 
         courseMapper.updateCourseFromPatchDto(dto, course);
 
         if (dto.teacherId() != null) {
-            course.setTeacher(teacherRepository.findById(dto.teacherId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Teacher with id " + dto.teacherId() + " does not exist!")));
+            course.setTeacher(teacherService.getTeacherByIdOrThrow(dto.teacherId()));
         }
 
         Course updatedCourse = courseRepository.save(course);
 
         return courseMapper.toResponseDto(updatedCourse);
+    }
+
+    Course getCourseByIdOrThrow(UUID id){
+            return courseRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Course with id " + id + " does not exist!"));
     }
 
 }

@@ -28,8 +28,7 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public StudentResponseDto getStudent(UUID id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id " + id + " does not exists!"));
+        Student student = getStudentByIdOrThrow(id);
         return studentMapper.toResponseDto(student);
     }
 
@@ -62,20 +61,23 @@ public class StudentService {
 
     @Transactional
     public void deleteStudent(UUID id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id "+ id + " does not exists!"));
+        Student student = getStudentByIdOrThrow(id);
         studentRepository.delete(student);
     }
 
     @Transactional
     public StudentResponseDto patchStudent(UUID id, StudentPatchDto studentPatchDto) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id "+ id + " does not exists!"));
+        Student student = getStudentByIdOrThrow(id);
 
         studentMapper.updateStudentFromPatchDto(studentPatchDto,student);
 
         Student savedStudent = studentRepository.save(student);
 
         return studentMapper.toResponseDto(savedStudent);
+    }
+
+    Student getStudentByIdOrThrow(UUID id){
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id "+ id + " does not exists!"));
     }
 }

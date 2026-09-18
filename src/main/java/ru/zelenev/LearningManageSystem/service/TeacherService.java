@@ -27,8 +27,7 @@ public class TeacherService {
 
     @Transactional(readOnly = true)
     public TeacherResponseDto getTeacher(UUID id) {
-        Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id " + id + " does not exist!"));
+        Teacher teacher = getTeacherByIdOrThrow(id);
 
         return teacherMapper.toResponseDto(teacher);
     }
@@ -60,20 +59,23 @@ public class TeacherService {
 
     @Transactional
     public void deleteTeacher(UUID id) {
-       Teacher teacher = teacherRepository.findById(id)
-               .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
+       Teacher teacher = getTeacherByIdOrThrow(id);
         teacherRepository.delete(teacher);
     }
 
     @Transactional
     public TeacherResponseDto patchTeacher(UUID id, TeacherPatchDto dto) {
-        Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
+        Teacher teacher = getTeacherByIdOrThrow(id);
 
         teacherMapper.updateTeacherFromPatchDto(dto,teacher);
 
         Teacher updatedTeacher = teacherRepository.save(teacher);
 
         return teacherMapper.toResponseDto(updatedTeacher);
+    }
+
+    Teacher getTeacherByIdOrThrow(UUID id){
+        return teacherRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
     }
 }
