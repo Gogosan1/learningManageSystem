@@ -4,8 +4,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.zelenev.LearningManageSystem.model.entity.Schedule;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,4 +21,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, UUID>{
 
     @EntityGraph(attributePaths = {"group", "teacher", "course"})
     Page<Schedule> findAllByTeacherId(UUID teacherId, Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM schedule WHERE schedule.start_time < :targetDate")
+    void deleteOlderThan(@Param("targetDate") OffsetDateTime oneYearAgo);
 }
