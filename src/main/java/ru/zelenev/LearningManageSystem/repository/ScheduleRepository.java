@@ -23,6 +23,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, UUID>{
     Page<Schedule> findAllByTeacherId(UUID teacherId, Pageable pageable);
 
     @Modifying
-    @Query("DELETE FROM schedule WHERE schedule.start_time < :targetDate")
+    @Query("DELETE FROM Schedule s WHERE s.startTime < :targetDate")
     void deleteOlderThan(@Param("targetDate") OffsetDateTime oneYearAgo);
 }

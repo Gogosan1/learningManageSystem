@@ -30,7 +30,7 @@ public class TeacherController {
     }
 
     @GetMapping
-    public PagedResponse<TeacherResponseDto> getTeachers(@PageableDefault(page = 0, size = 20, sort = "id")
+    public PagedResponse<TeacherResponseDto> getTeachers(@PageableDefault(page = 0, size = 20)
                                                              Pageable pageable){
         return teacherService.findAll(pageable);
     }

@@ -2,7 +2,6 @@ package ru.zelenev.LearningManageSystem.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.tomcat.autoconfigure.actuate.web.server.TomcatManagementServerProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,8 +33,6 @@ public class ScheduleService {
     private final GroupService groupService;
     private final TeacherService teacherService;
     private final ScheduleMapper scheduleMapper;
-
-    private final TomcatManagementServerProperties tomcatManagementServerProperties;
 
     @Transactional(readOnly = true)
     public ScheduleResponseDto getSchedule(UUID id) {

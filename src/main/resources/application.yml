@@ -20,6 +20,7 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        default_schema: lms
         show_sql: true
         format_sql: true
 

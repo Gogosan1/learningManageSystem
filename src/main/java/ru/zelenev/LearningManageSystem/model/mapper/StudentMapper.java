@@ -10,7 +10,7 @@ import ru.zelenev.LearningManageSystem.model.dto.StudentResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Student;
 
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface StudentMapper {
     Student toEntity(StudentCreateDto studentCreateDto);
 

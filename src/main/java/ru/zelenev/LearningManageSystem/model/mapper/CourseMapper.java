@@ -9,7 +9,7 @@ import ru.zelenev.LearningManageSystem.model.dto.CourseResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Course;
 
 
-@org.mapstruct.Mapper(componentModel = "string")
+@org.mapstruct.Mapper(componentModel = "spring")
 public interface CourseMapper {
     Course toEntity(CourseCreateDto CourseCreateDto);
 

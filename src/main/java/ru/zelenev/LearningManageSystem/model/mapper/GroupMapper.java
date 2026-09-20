@@ -9,7 +9,7 @@ import ru.zelenev.LearningManageSystem.model.dto.GroupResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Group;
 
 
-@org.mapstruct.Mapper(componentModel = "string")
+@org.mapstruct.Mapper(componentModel = "spring")
 public interface GroupMapper {
     Group toEntity(GroupCreateDto GroupCreateDto);
 

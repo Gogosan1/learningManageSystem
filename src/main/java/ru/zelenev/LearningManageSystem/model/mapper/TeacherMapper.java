@@ -9,7 +9,7 @@ import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Teacher;
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface TeacherMapper {
     Teacher toEntity(TeacherCreateDto teacherCreateDto);
 

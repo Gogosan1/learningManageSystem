@@ -10,7 +10,7 @@ import ru.zelenev.LearningManageSystem.model.dto.ScheduleResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Schedule;
 
 
-@org.mapstruct.Mapper(componentModel = "string")
+@org.mapstruct.Mapper(componentModel = "spring")
 public interface ScheduleMapper {
     @Mapping(target = "group", ignore = true)
     @Mapping(target = "course", ignore = true)
