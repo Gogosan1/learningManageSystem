@@ -1,6 +1,9 @@
 package ru.zelenev.LearningManageSystem.service;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMapper groupMapper;
+    private final GroupStudentService groupStudentService;
 
     @Transactional(readOnly = true)
     public GroupResponseDto getGroup(UUID id) {
@@ -57,6 +61,13 @@ public class GroupService {
     @Transactional
     public void deleteGroup(UUID id) {
         Group group = getGroupByIdOrThrow(id);
+
+        if (groupStudentService.hasStudentsWithNoAlternativeGroup(id)) {
+            throw new IllegalStateException(
+                    "Нельзя удалить группу. Некоторые студенты не имеют альтернативной группы."
+            );
+        }
+        groupStudentService.deleteRelationsByGroupId(id);
         groupRepository.delete(group);
     }
 
@@ -69,6 +80,14 @@ public class GroupService {
         Group updatedGroup = groupRepository.save(group);
         return groupMapper.toResponseDto(updatedGroup);
     }
+
+    @Transactional
+    public void addStudentsToGroup(UUID groupId, @NotNull @NotEmpty List<UUID> studentsId) {
+            Group group = getGroupByIdOrThrow(groupId);
+
+        groupStudentService.addStudentsToGroup(group, studentsId);
+    }
+
 
     Group getGroupByIdOrThrow(UUID id){
         return groupRepository.findById(id)

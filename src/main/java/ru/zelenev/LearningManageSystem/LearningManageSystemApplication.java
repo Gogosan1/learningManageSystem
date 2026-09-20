@@ -2,8 +2,10 @@ package ru.zelenev.LearningManageSystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class LearningManageSystemApplication {
 
     public static void main(String[] args) {

@@ -23,6 +23,7 @@ import java.util.UUID;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final GroupStudentService groupStudentService;
 
     private final StudentMapper studentMapper;
 
@@ -53,8 +54,12 @@ public class StudentService {
 
     @Transactional
     public StudentResponseDto createStudent(@Valid StudentCreateDto studentCreateDto) {
+
         Student student = studentMapper.toEntity(studentCreateDto);
         Student savedStudent = studentRepository.save(student);
+
+        groupStudentService.addNewStudentToGroups(savedStudent, studentCreateDto.groupIds());
+
         return studentMapper.toResponseDto(savedStudent);
     }
 

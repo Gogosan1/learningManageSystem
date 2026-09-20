@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.zelenev.LearningManageSystem.model.dto.AddStudentsRequestDto;
 import ru.zelenev.LearningManageSystem.model.dto.GroupCreateDto;
 import ru.zelenev.LearningManageSystem.model.dto.GroupPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.GroupResponseDto;
@@ -38,6 +39,13 @@ public class GroupController {
     public ResponseEntity<GroupResponseDto> postGroup(@Valid @RequestBody GroupCreateDto groupRequestDto){
         GroupResponseDto groupResponseDto = groupService.createGroup(groupRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupResponseDto);
+    }
+
+    @PostMapping("/{groupId}/students")
+    public ResponseEntity<Void> addStudentsToGroup(@PathVariable("groupId") UUID groupId,
+                                                   @Valid @RequestBody AddStudentsRequestDto dto){
+        groupService.addStudentsToGroup(groupId, dto.studentsIds());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
