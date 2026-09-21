@@ -10,10 +10,9 @@ import org.springframework.data.repository.query.Param;
 import ru.zelenev.LearningManageSystem.model.entity.Schedule;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
-public interface ScheduleRepository extends JpaRepository<Schedule, UUID>{
+public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
 
 
     @EntityGraph(attributePaths = {"group", "teacher", "course"})

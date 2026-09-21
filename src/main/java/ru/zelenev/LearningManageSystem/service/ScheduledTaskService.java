@@ -16,7 +16,7 @@ public class ScheduledTaskService {
 
     @Scheduled(cron = "0 0 3 * * *")
     @Transactional
-    public void deleteOldScheduleNotes(){
+    public void deleteOldScheduleNotes() {
         OffsetDateTime oneYearAgo = OffsetDateTime.now().minusYears(1);
 
         scheduleRepository.deleteOlderThan(oneYearAgo);

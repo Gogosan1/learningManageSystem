@@ -24,38 +24,38 @@ public class GroupController {
     public final GroupService groupService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<GroupResponseDto> getGroup(@PathVariable("id")UUID id){
+    public ResponseEntity<GroupResponseDto> getGroup(@PathVariable("id") UUID id) {
         GroupResponseDto groupResponseDto = groupService.getGroup(id);
         return ResponseEntity.ok(groupResponseDto);
     }
 
     @GetMapping
-    public PagedResponse<GroupResponseDto> getGroups(@PageableDefault(page = 0, size = 20, sort = "id")
-                                                                     Pageable pageable){
+    public PagedResponse<GroupResponseDto> getGroups(@PageableDefault(size = 20)
+                                                     Pageable pageable) {
         return groupService.findAll(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<GroupResponseDto> postGroup(@Valid @RequestBody GroupCreateDto groupRequestDto){
+    public ResponseEntity<GroupResponseDto> postGroup(@Valid @RequestBody GroupCreateDto groupRequestDto) {
         GroupResponseDto groupResponseDto = groupService.createGroup(groupRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(groupResponseDto);
     }
 
     @PostMapping("/{groupId}/students")
     public ResponseEntity<Void> addStudentsToGroup(@PathVariable("groupId") UUID groupId,
-                                                   @Valid @RequestBody AddStudentsRequestDto dto){
+                                                   @Valid @RequestBody AddStudentsRequestDto dto) {
         groupService.addStudentsToGroup(groupId, dto.studentsIds());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable("id") UUID id){
+    public ResponseEntity<Void> deleteGroup(@PathVariable("id") UUID id) {
         groupService.deleteGroup(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<GroupResponseDto> patchGroup(@PathVariable("id") UUID id, @RequestBody GroupPatchDto groupPatchDto){
+    public ResponseEntity<GroupResponseDto> patchGroup(@PathVariable("id") UUID id, @RequestBody GroupPatchDto groupPatchDto) {
         GroupResponseDto groupResponseDto = groupService.patchGroup(id, groupPatchDto);
         return ResponseEntity.ok(groupResponseDto);
     }

@@ -3,7 +3,6 @@ package ru.zelenev.LearningManageSystem.service;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,7 @@ public class GroupService {
 
     @Transactional
     public GroupResponseDto patchGroup(UUID id, GroupPatchDto dto) {
-        Group group =  getGroupByIdOrThrow(id);
+        Group group = getGroupByIdOrThrow(id);
 
         groupMapper.updateGroupFromPatchDto(dto, group);
 
@@ -83,13 +82,13 @@ public class GroupService {
 
     @Transactional
     public void addStudentsToGroup(UUID groupId, @NotNull @NotEmpty List<UUID> studentsId) {
-            Group group = getGroupByIdOrThrow(groupId);
+        Group group = getGroupByIdOrThrow(groupId);
 
         groupStudentService.addStudentsToGroup(group, studentsId);
     }
 
 
-    Group getGroupByIdOrThrow(UUID id){
+    Group getGroupByIdOrThrow(UUID id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Group with id " + id + " does not exists"));
     }

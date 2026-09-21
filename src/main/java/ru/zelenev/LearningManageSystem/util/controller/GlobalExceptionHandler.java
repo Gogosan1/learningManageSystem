@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException exception){
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
@@ -25,27 +25,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EndTimeBeforeStartTimeException.class)
-    public ResponseEntity<ErrorResponse> handleEndTimeBeforeStartTimeException(EndTimeBeforeStartTimeException exception){
+    public ResponseEntity<ErrorResponse> handleEndTimeBeforeStartTimeException(EndTimeBeforeStartTimeException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.UNPROCESSABLE_CONTENT.value(),
                 "Invalid time",
                 exception.getMessage());
-        return new ResponseEntity<>(errorResponse,HttpStatus.UNPROCESSABLE_CONTENT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_CONTENT);
     }
 
     @ExceptionHandler(TimeBeforeNowMomentException.class)
-    public ResponseEntity<ErrorResponse> handleTimeBeforeNowMomentException(TimeBeforeNowMomentException exception){
+    public ResponseEntity<ErrorResponse> handleTimeBeforeNowMomentException(TimeBeforeNowMomentException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.UNPROCESSABLE_CONTENT.value(),
                 "Invalid time",
                 exception.getMessage());
-        return new ResponseEntity<>(errorResponse,HttpStatus.UNPROCESSABLE_CONTENT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_CONTENT);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception){
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

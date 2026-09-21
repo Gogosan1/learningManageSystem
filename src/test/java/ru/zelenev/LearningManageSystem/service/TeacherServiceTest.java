@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,14 +11,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
-import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherCreateDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Teacher;
 import ru.zelenev.LearningManageSystem.model.mapper.TeacherMapper;
 import ru.zelenev.LearningManageSystem.repository.TeacherRepository;
+import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
+import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,11 +40,11 @@ public class TeacherServiceTest {
     private UUID teacherId;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         teacherId = UUID.randomUUID();
-        teacher = new Teacher(teacherId,"Pavel", "Zelenev");
+        teacher = new Teacher(teacherId, "Pavel", "Zelenev");
         teacherMapper = Mappers.getMapper(TeacherMapper.class);
-        teacherService = new TeacherService(teacherMapper,teacherRepository);
+        teacherService = new TeacherService(teacherMapper, teacherRepository);
     }
 
     @Nested
@@ -81,11 +80,11 @@ public class TeacherServiceTest {
     class FindAll {
 
         @Test
-        void ShouldReturnPagedResponseOfTeacherResponseDto(){
+        void ShouldReturnPagedResponseOfTeacherResponseDto() {
             Teacher teacher1 = new Teacher(UUID.randomUUID(), "Nikolay", "Petrov");
             Teacher teacher2 = new Teacher(UUID.randomUUID(), "Alex", "Li");
-            List<Teacher> teacherList = List.of(teacher,teacher1, teacher2);
-            Pageable pageable = PageRequest.of(0,2);
+            List<Teacher> teacherList = List.of(teacher, teacher1, teacher2);
+            Pageable pageable = PageRequest.of(0, 2);
             Page<Teacher> mockPageFromDb = new PageImpl<>(teacherList, pageable, 3);
             when(teacherRepository.findAll(pageable)).thenReturn(mockPageFromDb);
 
@@ -114,7 +113,7 @@ public class TeacherServiceTest {
     class CreateTeacher {
 
         @Test
-        void ShouldReturnTeacherResponseDto(){
+        void ShouldReturnTeacherResponseDto() {
             TeacherCreateDto teacherCreateDto = new TeacherCreateDto(teacher.getFirstName(), teacher.getLastName());
             when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
 
@@ -132,7 +131,7 @@ public class TeacherServiceTest {
     class DeleteTeacher {
 
         @Test
-        void ShouldSuccessfullyDelete(){
+        void ShouldSuccessfullyDelete() {
             when(teacherRepository.findById(teacherId)).thenReturn(Optional.of(teacher));
 
             teacherService.deleteTeacher(teacherId);

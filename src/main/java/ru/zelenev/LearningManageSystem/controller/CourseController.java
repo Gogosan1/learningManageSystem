@@ -7,11 +7,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.zelenev.LearningManageSystem.model.dto.CoursePatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.CourseCreateDto;
+import ru.zelenev.LearningManageSystem.model.dto.CoursePatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.CourseResponseDto;
-import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 import ru.zelenev.LearningManageSystem.service.CourseService;
+import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 
 import java.util.UUID;
 
@@ -23,20 +23,20 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseResponseDto> getCourse(@PathVariable("id")UUID id){
+    public ResponseEntity<CourseResponseDto> getCourse(@PathVariable("id") UUID id) {
         CourseResponseDto courseResponseDto = courseService.getCourse(id);
         return ResponseEntity.ok(courseResponseDto);
     }
 
     @GetMapping
     public PagedResponse<CourseResponseDto> getCourses(
-            @PageableDefault(page = 0, size = 20, sort = "id") Pageable pageable){
+            @PageableDefault(size = 20) Pageable pageable) {
 
         return courseService.findAll(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<CourseResponseDto> createCourse(@Valid @RequestBody CourseCreateDto courseCreateDto){
+    public ResponseEntity<CourseResponseDto> createCourse(@Valid @RequestBody CourseCreateDto courseCreateDto) {
         CourseResponseDto courseResponseDto = courseService.createCourse(courseCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(courseResponseDto);
     }
@@ -49,7 +49,7 @@ public class CourseController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CourseResponseDto> patchCourse(@PathVariable("id") UUID id,
-                                                         @RequestBody CoursePatchDto coursePatchDto){
+                                                         @RequestBody CoursePatchDto coursePatchDto) {
         CourseResponseDto courseResponseDto = courseService.patchCourse(id, coursePatchDto);
         return ResponseEntity.ok(courseResponseDto);
     }

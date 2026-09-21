@@ -43,7 +43,7 @@ public class ScheduleService {
     // TODO: по хорошему в качестве базового поведения можно привязать поиск к текущей дате и на ближайшую неделю
     @Transactional(readOnly = true)
     public PagedResponse<ScheduleResponseDto> findAllByGroupId(UUID groupId, Pageable pageable) {
-        Page<Schedule> schedulePages = scheduleRepository.findAllByGroupId(groupId,pageable);
+        Page<Schedule> schedulePages = scheduleRepository.findAllByGroupId(groupId, pageable);
         List<ScheduleResponseDto> content = schedulePages.
                 stream().
                 map(scheduleMapper::toResponseDto).
@@ -61,8 +61,8 @@ public class ScheduleService {
 
     // TODO: по хорошему в качестве базового поведения можно привязать поиск к текущей дате и на ближайшую неделю
     @Transactional(readOnly = true)
-    public PagedResponse<ScheduleResponseDto> findAllByTeacherId(UUID teacherId, Pageable pageable){
-        Page<Schedule> schedulePages = scheduleRepository.findAllByTeacherId(teacherId,pageable);
+    public PagedResponse<ScheduleResponseDto> findAllByTeacherId(UUID teacherId, Pageable pageable) {
+        Page<Schedule> schedulePages = scheduleRepository.findAllByTeacherId(teacherId, pageable);
         List<ScheduleResponseDto> content = schedulePages.
                 stream().
                 map(scheduleMapper::toResponseDto).
@@ -108,17 +108,17 @@ public class ScheduleService {
 
         scheduleMapper.updateScheduleFromPatchDto(schedulePatchDto, schedule);
 
-        if(schedulePatchDto.courseId() != null){
-           Course course = courseService.getCourseByIdOrThrow(schedulePatchDto.courseId());
-           schedule.setCourse(course);
+        if (schedulePatchDto.courseId() != null) {
+            Course course = courseService.getCourseByIdOrThrow(schedulePatchDto.courseId());
+            schedule.setCourse(course);
         }
 
-        if(schedulePatchDto.groupId() != null){
+        if (schedulePatchDto.groupId() != null) {
             Group group = groupService.getGroupByIdOrThrow(schedulePatchDto.groupId());
             schedule.setGroup(group);
         }
 
-        if(schedulePatchDto.teacherId() != null) {
+        if (schedulePatchDto.teacherId() != null) {
             Teacher teacher = teacherService.getTeacherByIdOrThrow(schedulePatchDto.teacherId());
             schedule.setTeacher(teacher);
         }
@@ -131,12 +131,12 @@ public class ScheduleService {
         return scheduleMapper.toResponseDto(updatedSchedule);
     }
 
-    private Schedule getScheduleByIdOrThrow(UUID id){
+    private Schedule getScheduleByIdOrThrow(UUID id) {
         return scheduleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Schedule with id "+ id + " does not exists!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule with id " + id + " does not exists!"));
     }
 
-    private void validateStartTimeAndEndTimeOrThrow(OffsetDateTime startTime, OffsetDateTime endTime){
+    private void validateStartTimeAndEndTimeOrThrow(OffsetDateTime startTime, OffsetDateTime endTime) {
         if (endTime.isBefore(startTime))
             throw new EndTimeBeforeStartTimeException("End time can not be before start time!");
 

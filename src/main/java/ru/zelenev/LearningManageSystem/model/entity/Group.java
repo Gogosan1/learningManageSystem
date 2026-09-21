@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name =  "groups")
+@Table(name = "groups")
 @Getter
 public class Group {
 

@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
-import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
-import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherCreateDto;
+import ru.zelenev.LearningManageSystem.model.dto.TeacherPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.TeacherResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Teacher;
 import ru.zelenev.LearningManageSystem.model.mapper.TeacherMapper;
 import ru.zelenev.LearningManageSystem.repository.TeacherRepository;
+import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
+import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +59,7 @@ public class TeacherService {
 
     @Transactional
     public void deleteTeacher(UUID id) {
-       Teacher teacher = getTeacherByIdOrThrow(id);
+        Teacher teacher = getTeacherByIdOrThrow(id);
         teacherRepository.delete(teacher);
     }
 
@@ -67,15 +67,15 @@ public class TeacherService {
     public TeacherResponseDto patchTeacher(UUID id, TeacherPatchDto dto) {
         Teacher teacher = getTeacherByIdOrThrow(id);
 
-        teacherMapper.updateTeacherFromPatchDto(dto,teacher);
+        teacherMapper.updateTeacherFromPatchDto(dto, teacher);
 
         Teacher updatedTeacher = teacherRepository.save(teacher);
 
         return teacherMapper.toResponseDto(updatedTeacher);
     }
 
-    Teacher getTeacherByIdOrThrow(UUID id){
+    Teacher getTeacherByIdOrThrow(UUID id) {
         return teacherRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id "+ id +" does not exist!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id " + id + " does not exist!"));
     }
 }

@@ -55,13 +55,13 @@ public class GroupStudentService {
     @Transactional
     public void addStudentsToGroup(Group group, @NotNull @NotEmpty List<UUID> studentsId) {
         List<Student> students = studentRepository.findAllById(studentsId);
-        if(studentsId.size() != students.size()){
+        if (studentsId.size() != students.size()) {
             throw new ResourceNotFoundException("Один или несколько указанных студентов не найдены");
         }
 
         List<GroupStudent> inscriptions = new ArrayList<>();
 
-        for(Student student : students){
+        for (Student student : students) {
             GroupStudentId id = new GroupStudentId(student.getId(), group.getId());
 
             GroupStudent inscription = new GroupStudent();
@@ -73,7 +73,7 @@ public class GroupStudentService {
 
         }
 
-        if(!inscriptions.isEmpty()){
+        if (!inscriptions.isEmpty()) {
             groupStudentRepository.saveAll(inscriptions);
         }
 

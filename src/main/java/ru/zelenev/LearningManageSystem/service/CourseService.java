@@ -83,10 +83,10 @@ public class CourseService {
         return courseMapper.toResponseDto(updatedCourse);
     }
 
-    Course getCourseByIdOrThrow(UUID id){
-            return courseRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Course with id " + id + " does not exist!"));
+    Course getCourseByIdOrThrow(UUID id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Course with id " + id + " does not exist!"));
     }
 
 }

@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
-import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
 import ru.zelenev.LearningManageSystem.model.dto.StudentCreateDto;
 import ru.zelenev.LearningManageSystem.model.dto.StudentPatchDto;
 import ru.zelenev.LearningManageSystem.model.dto.StudentResponseDto;
 import ru.zelenev.LearningManageSystem.model.entity.Student;
 import ru.zelenev.LearningManageSystem.model.mapper.StudentMapper;
 import ru.zelenev.LearningManageSystem.repository.StudentRepository;
+import ru.zelenev.LearningManageSystem.util.entity.PagedResponse;
+import ru.zelenev.LearningManageSystem.util.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -74,15 +74,15 @@ public class StudentService {
     public StudentResponseDto patchStudent(UUID id, StudentPatchDto studentPatchDto) {
         Student student = getStudentByIdOrThrow(id);
 
-        studentMapper.updateStudentFromPatchDto(studentPatchDto,student);
+        studentMapper.updateStudentFromPatchDto(studentPatchDto, student);
 
         Student savedStudent = studentRepository.save(student);
 
         return studentMapper.toResponseDto(savedStudent);
     }
 
-    Student getStudentByIdOrThrow(UUID id){
+    Student getStudentByIdOrThrow(UUID id) {
         return studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id "+ id + " does not exists!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id " + id + " does not exists!"));
     }
 }
