@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zelenev.learning_manage_system.model.dto.ScheduleCreateDto;
+import ru.zelenev.learning_manage_system.model.dto.ScheduleFilterDto;
 import ru.zelenev.learning_manage_system.model.dto.SchedulePatchDto;
 import ru.zelenev.learning_manage_system.model.dto.ScheduleResponseDto;
 import ru.zelenev.learning_manage_system.model.entity.Course;
@@ -15,6 +16,7 @@ import ru.zelenev.learning_manage_system.model.entity.Schedule;
 import ru.zelenev.learning_manage_system.model.entity.Teacher;
 import ru.zelenev.learning_manage_system.model.mapper.ScheduleMapper;
 import ru.zelenev.learning_manage_system.repository.ScheduleRepository;
+import ru.zelenev.learning_manage_system.util.ScheduleSpecifications;
 import ru.zelenev.learning_manage_system.util.entity.PagedResponse;
 import ru.zelenev.learning_manage_system.util.exceptions.EndTimeBeforeStartTimeException;
 import ru.zelenev.learning_manage_system.util.exceptions.ResourceNotFoundException;
@@ -41,26 +43,8 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public PagedResponse<ScheduleResponseDto> findAllByGroupId(UUID groupId, Pageable pageable) {
-        Page<Schedule> schedulePages = scheduleRepository.findAllByGroupId(groupId, pageable);
-        List<ScheduleResponseDto> content = schedulePages.
-                stream().
-                map(scheduleMapper::toResponseDto).
-                toList();
-
-        return new PagedResponse<>(
-                content,
-                schedulePages.getNumber(),
-                schedulePages.getSize(),
-                schedulePages.getTotalElements(),
-                schedulePages.getTotalPages(),
-                schedulePages.isLast()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public PagedResponse<ScheduleResponseDto> findAllByTeacherId(UUID teacherId, Pageable pageable) {
-        Page<Schedule> schedulePages = scheduleRepository.findAllByTeacherId(teacherId, pageable);
+    public PagedResponse<ScheduleResponseDto> findAllByFilter(Pageable pageable, ScheduleFilterDto dto) {
+        Page<Schedule> schedulePages = scheduleRepository.findAll(ScheduleSpecifications.byFilter(dto), pageable);
         List<ScheduleResponseDto> content = schedulePages.
                 stream().
                 map(scheduleMapper::toResponseDto).

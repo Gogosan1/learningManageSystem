@@ -66,7 +66,6 @@ public class GroupService {
                     "Нельзя удалить группу. Некоторые студенты не имеют альтернативной группы."
             );
         }
-        groupStudentService.deleteRelationsByGroupId(id);
         groupRepository.delete(group);
     }
 

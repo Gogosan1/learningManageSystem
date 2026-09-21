@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zelenev.learning_manage_system.model.dto.ScheduleCreateDto;
+import ru.zelenev.learning_manage_system.model.dto.ScheduleFilterDto;
 import ru.zelenev.learning_manage_system.model.dto.SchedulePatchDto;
 import ru.zelenev.learning_manage_system.model.dto.ScheduleResponseDto;
 import ru.zelenev.learning_manage_system.service.ScheduleService;
@@ -28,22 +29,12 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleResponseDto);
     }
 
-
-    // TODO : переписать на specification
-    @GetMapping("/{groupId}")
-    public PagedResponse<ScheduleResponseDto> getSchedulesByGroupId(
-            @PageableDefault(page = 0, size = 20) Pageable pageable,
-            @PathVariable("groupId") UUID groupId) {
-
-        return scheduleService.findAllByGroupId(groupId, pageable);
-    }
-
-    @GetMapping("/{teacherId}")
-    public PagedResponse<ScheduleResponseDto> getSchedulesByTeacherId(
-            @PageableDefault(page = 0, size = 20) Pageable pageable,
-            @PathVariable("teacherId") UUID teacherId) {
-
-        return scheduleService.findAllByTeacherId(teacherId, pageable);
+    @GetMapping
+    public PagedResponse<ScheduleResponseDto> getSchedules(
+            @PageableDefault(size = 20) Pageable pageable,
+            @RequestBody ScheduleFilterDto scheduleFilterDto
+    ) {
+        return scheduleService.findAllByFilter(pageable, scheduleFilterDto);
     }
 
 
