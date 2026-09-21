@@ -8,8 +8,14 @@ import java.util.List;
 import java.util.UUID;
 
 public record StudentCreateDto(
-        @NotNull @NotBlank String firstName,
-        @NotNull @NotBlank String lastName,
-        @NotNull @NotEmpty List<UUID> groupIds
+        @NotNull(message = "student first name can not be null")
+        @NotBlank(message = " student first name can not be blank")
+        String firstName,
+        @NotNull(message = "student last name can not be null")
+        @NotBlank(message = "student last name can not be blank")
+        String lastName,
+        @NotNull(message = "group id list can not be null")
+        @NotEmpty(message = "group id list can not be empty")
+        List<UUID> groupIds
 ) {
 }
