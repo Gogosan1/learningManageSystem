@@ -1,9 +1,0 @@
-package ru.zelenev.learning_manage_system.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import ru.zelenev.learning_manage_system.model.entity.Teacher;
-
-import java.util.UUID;
-
-public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
-}
