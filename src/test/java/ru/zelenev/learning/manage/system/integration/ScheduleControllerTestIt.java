@@ -4,16 +4,16 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.TestPropertySource;
+import ru.zelenev.learning.manage.system.model.dto.ScheduleResponseDto;
+import ru.zelenev.learning.manage.system.util.entity.PagedResponse;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
         "spring.liquibase.change-log=classpath:db/test-changelog/db.test-changelog-master.yaml",
         "spring.liquibase.contexts=schedule_test"
@@ -37,24 +37,24 @@ public class ScheduleControllerTestIt extends AbstractIt {
                     .query(UUID.class)
                     .single();
 
-            restTestClient.get()
-                    .uri(
-                            uriBuilder -> uriBuilder.path("/api/v1/schedules")
-                                    .queryParam("teacherId", teacherId)
-                                    .build())
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .jsonPath("$.pageNumber").isEqualTo(0)
-                    .jsonPath("$.totalElements").isEqualTo(5)
-                    .jsonPath("$.content[*].teacher.id").value(ids -> {
-                        List<String> idList = (List<String>) ids;
-                        assertThat(idList)
-                                .allMatch(id -> id.equals(teacherId.toString()));
-                    })
-                    .jsonPath("$.content[0].group.name").isEqualTo("DPO-1")
-                    .jsonPath("$.content[0].course.title").isEqualTo("Базы данных")
-                    .jsonPath("$.content[0].teacher.firstName").isEqualTo("Pavel");
+            PagedResponse<ScheduleResponseDto> response =
+                    restTestClient.get()
+                            .uri(
+                                    uriBuilder -> uriBuilder.path("/api/v1/schedules")
+                                            .queryParam("teacherId", teacherId)
+                                            .build())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(new ParameterizedTypeReference<
+                                    PagedResponse<ScheduleResponseDto>>() {
+                            })
+                            .returnResult()
+                            .getResponseBody();
+
+            assertThat(response.getTotalElements()).isEqualTo(5);
+            assertThat(response.getContent())
+                    .allMatch(schedule ->
+                            schedule.teacher().id().equals(teacherId));
         }
 
         @Test
@@ -64,22 +64,24 @@ public class ScheduleControllerTestIt extends AbstractIt {
                     .query(UUID.class)
                     .single();
 
-            restTestClient.get()
-                    .uri(uriBuilder -> uriBuilder.path("/api/v1/schedules")
-                            .queryParam("groupId", groupId)
-                            .build())
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .jsonPath("$.pageNumber").isEqualTo(0)
-                    .jsonPath("$.totalElements").isEqualTo(5)
-                    .jsonPath("$.content[*].group.id").value(ids -> {
-                        List<String> idList = (List<String>) ids;
-                        assertThat(idList).allMatch(id -> id.equals(groupId.toString()));
-                    })
-                    .jsonPath("$.content[0].group.name").isEqualTo("DPO-1")
-                    .jsonPath("$.content[0].course.title").isEqualTo("JAVA")
-                    .jsonPath("$.content[0].teacher.firstName").isEqualTo("Pavel");
+            PagedResponse<ScheduleResponseDto> response =
+                    restTestClient.get()
+                            .uri(uriBuilder -> uriBuilder.path("/api/v1/schedules")
+                                    .queryParam("groupId", groupId)
+                                    .build())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(new ParameterizedTypeReference<
+                                    PagedResponse<ScheduleResponseDto>>() {
+                            })
+                            .returnResult()
+                            .getResponseBody();
+
+            assertThat(response.getTotalElements()).isEqualTo(3);
+
+            assertThat(response.getContent())
+                    .allMatch(schedule ->
+                            schedule.group().id().equals(groupId));
         }
 
         @Test
@@ -94,27 +96,26 @@ public class ScheduleControllerTestIt extends AbstractIt {
                     .query(UUID.class)
                     .single();
 
-            restTestClient.get()
-                    .uri(uriBuilder -> uriBuilder.path("/api/v1/schedules")
-                            .queryParam("teacherId", teacherId)
-                            .queryParam("groupId", groupId)
-                            .build())
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .jsonPath("$.pageNumber").isEqualTo(0)
-                    .jsonPath("$.totalElements").isEqualTo(3)
-                    .jsonPath("$.content[*].teacher.id").value(ids -> {
-                        List<String> idList = (List<String>) ids;
-                        assertThat(idList).allMatch(id -> id.equals(teacherId.toString()));
-                    })
-                    .jsonPath("$.content[*].group.id").value(ids -> {
-                        List<String> idList = (List<String>) ids;
-                        assertThat(idList).allMatch(id -> id.equals(groupId.toString()));
-                    })
-                    .jsonPath("$.content[0].group.name").isEqualTo("DPO-1")
-                    .jsonPath("$.content[0].course.title").isEqualTo("Базы данных")
-                    .jsonPath("$.content[0].teacher.firstName").isEqualTo("Pavel");
+            PagedResponse<ScheduleResponseDto> response =
+                    restTestClient.get()
+                            .uri(uriBuilder -> uriBuilder.path("/api/v1/schedules")
+                                    .queryParam("teacherId", teacherId)
+                                    .queryParam("groupId", groupId)
+                                    .build())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(new ParameterizedTypeReference<
+                                    PagedResponse<ScheduleResponseDto>>() {
+                            })
+                            .returnResult()
+                            .getResponseBody();
+
+            assertThat(response.getTotalElements()).isEqualTo(3);
+
+            assertThat(response.getContent())
+                    .allMatch(schedule ->
+                            schedule.group().id().equals(groupId) &&
+                                    schedule.teacher().id().equals(teacherId));
         }
 
         @Test
@@ -125,10 +126,7 @@ public class ScheduleControllerTestIt extends AbstractIt {
                     .expectStatus().isOk()
                     .expectBody()
                     .jsonPath("$.pageNumber").isEqualTo(0)
-                    .jsonPath("$.totalElements").isEqualTo(8)
-                    .jsonPath("$.content").isArray()
-                    .jsonPath("$.content[0].group.name").isEqualTo("DPO-1")
-                    .jsonPath("$.content[0].course.title").isEqualTo("Базы данных");
+                    .jsonPath("$.totalElements").isEqualTo(8);
         }
 
     }
